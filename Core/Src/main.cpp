@@ -12,7 +12,7 @@ int main(void) {
 #ifdef SIM_ON
     SharedMemory::start();
 #endif
-    uint32_t local_serversocket_port = 8202;
+    uint16_t local_serversocket_port = 8202;
     std::string localip = "127.0.0.1";
     std::unique_ptr<ServerSocket> serversocket = nullptr;
     StackPacket* inputpacket = nullptr;
