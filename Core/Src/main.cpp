@@ -31,7 +31,7 @@ int main(void) {
     });*/
 
     Time::register_low_precision_alarm(200,[&](){
-        serversocket.send_order(inputpacket);
+        serversocket.send();
     });
 
     while (1) {
