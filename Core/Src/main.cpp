@@ -5,6 +5,8 @@
 #endif
 
 #include "ST-LIB.hpp"
+#include <thread>
+#include <chrono>
 
 
 
@@ -14,26 +16,26 @@ int main(void) {
 #endif
     uint16_t local_serversocket_port = 8202;
     std::string localip = "127.0.0.1";
-    std::unique_ptr<ServerSocket> serversocket = nullptr;
-    StackPacket* inputpacket = nullptr;
-    DigitalInput input(PA1);
+    
+    uint8_t id = DigitalInput::inscribe(PA8);
     bool value = false;
-    serversocket = std::make_unique<ServerSocket>(localip,local_serversocket_port);
-    StackPacket* mypacket = new StackPacket(15,&value);//Random id
+    auto inputpacket = new StackPacket(15,&value);//Random id
+    
     STLIB::start();
+    ServerSocket serversocket(localip,local_serversocket_port);
 
-    Time::register_low_precision_alarm(1000,[&](){
-        if(mysocket->is_connected() == false){
-            mysocket->reconnect();
+    /*Time::register_low_precision_alarm(1000,[&](){
+        if(!serversocket.is_connected()){
+            serversocket.();
         }
-    });
+    });*/
 
     Time::register_low_precision_alarm(200,[&](){
-        serversocket->send_packet(mypacket);
+        serversocket.send_order(inputpacket);
     });
 
     while (1) {
-        value = input.read_pin_state();
+        value = DigitalInput::read_pin_state(id);
         STLIB::update();
         std::this_thread::sleep_for(std::chrono::milliseconds(150));
     }
